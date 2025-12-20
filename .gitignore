@@ -1,41 +1,81 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# Dependencies
+node_modules/
+**/node_modules/
+.pnp
+.pnp.js
 
-# dependencies
-/node_modules
-/.pnp
-.pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/versions
+# Testing
+coverage/
+*.log
 
-# testing
-/coverage
+# Production
+dist/
+**/dist/
+build/
+**/build/
+.next/
+**/.next/
+out/
+.vercel
 
-# next.js
-/.next/
-/out/
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+**/.env
+**/.env.local
 
-# production
-/build
-
-# misc
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
 .DS_Store
-*.pem
 
-# debug
+# Docker
+.dockerignore
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# TypeORM
+**/migrations/*.js
+**/migrations/*.ts
+
+# TypeScript
+*.tsbuildinfo
+tsconfig.tsbuildinfo
+
+# Misc
+.cache/
+.temp/
+*.tmp
+
+# OS
+Thumbs.db
+
+# Logs
+logs/
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-.pnpm-debug.log*
+pnpm-debug.log*
+lerna-debug.log*
 
-# env files (can opt-in for committing if needed)
-.env*
+# pnpm
+.pnpm-store/
+**/.pnpm-store/
+.pnpm-debug.log
+pnpm-debug.log
 
-# vercel
-.vercel
+# Lock files (keep these)
+# pnpm-lock.yaml
+# package-lock.json
+# yarn.lock
 
-# typescript
-*.tsbuildinfo
-next-env.d.ts

@@ -1,0 +1,28 @@
+{
+  "name": "veroxos-mobile",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "android": "react-native run-android",
+    "ios": "set -e && (lsof -ti:8081 > /dev/null 2>&1 || (pnpm start > /dev/null 2>&1 & sleep 6)) && cd ios && (xcrun simctl list devices booted | grep -q Booted || (xcrun simctl boot 'iPhone 17 Pro' 2>&1 | grep -v 'already booted' || true && sleep 3)) && xcodebuild -workspace VeroxosKitchen.xcworkspace -scheme VeroxosKitchen -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 17 Pro' -derivedDataPath ./build build 2>&1 | grep -E '(BUILD|succeeded|failed)' | tail -1 && xcrun simctl install booted ./build/Build/Products/Debug-iphonesimulator/VeroxosKitchen.app > /dev/null 2>&1 && xcrun simctl launch booted com.veroxos.kitchen > /dev/null 2>&1",
+    "start": "react-native start",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.28.4",
+    "@tanstack/react-query": "^5.90.12",
+    "react": "18.2.0",
+    "react-native": "0.73.0",
+    "socket.io-client": "^4.8.1"
+  },
+  "devDependencies": {
+    "@react-native/metro-config": "^0.83.1",
+    "@tsconfig/react-native": "^3.0.0",
+    "@types/node": "^25.0.3",
+    "@types/react": "^18.2.0",
+    "@types/react-native": "^0.73.0",
+    "metro-config": "^0.83.3",
+    "typescript": "^5.0.0"
+  }
+}

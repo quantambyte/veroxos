@@ -1,0 +1,21 @@
+require_relative '../node_modules/react-native/scripts/react_native_pods'
+
+platform :ios, '13.4'
+install! 'cocoapods', :deterministic_uuids => false
+
+project 'VeroxosKitchen.xcodeproj'
+
+target 'VeroxosKitchen' do
+  config = use_react_native!(
+    :path => '../node_modules/react-native',
+    :hermes_enabled => true
+  )
+
+  post_install do |installer|
+    react_native_post_install(
+      installer,
+      '../node_modules/react-native',
+      :mac_catalyst_enabled => false
+    )
+  end
+end

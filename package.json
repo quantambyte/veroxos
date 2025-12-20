@@ -1,26 +1,40 @@
 {
   "name": "veroxos",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "biome check",
-    "format": "biome format --write"
-  },
-  "dependencies": {
-    "next": "16.1.0",
-    "react": "19.2.3",
-    "react-dom": "19.2.3"
+    "dev": "docker-compose up",
+    "dev:build": "docker-compose up --build",
+    "dev:detached": "docker-compose up -d",
+    "prod": "docker-compose -f docker-compose.yml up --build",
+    "prod:detached": "docker-compose -f docker-compose.yml up -d --build",
+    "down": "docker-compose down",
+    "down:volumes": "docker-compose down -v",
+    "logs": "docker-compose logs -f",
+    "logs:be": "docker-compose logs -f backend",
+    "logs:db": "docker-compose logs -f postgres",
+    "build": "pnpm -r build",
+    "build:be": "cd veroxos-be && pnpm build",
+    "build:fe": "cd veroxos-fe && pnpm build",
+    "lint": "pnpm -r lint",
+    "lint:be": "cd veroxos-be && pnpm lint",
+    "lint:fe": "cd veroxos-fe && pnpm lint",
+    "lint:fix": "pnpm -r lint:fix",
+    "format": "pnpm -r format",
+    "format:be": "cd veroxos-be && pnpm format",
+    "format:fe": "cd veroxos-fe && pnpm format",
+    "install": "pnpm install -r",
+    "install:be": "cd veroxos-be && pnpm install",
+    "install:fe": "cd veroxos-fe && pnpm install",
+    "clean": "docker-compose down -v && rm -rf veroxos-be/node_modules veroxos-fe/node_modules veroxos-be/dist veroxos-fe/.next",
+    "seed": "docker-compose exec backend pnpm run seed",
+    "test": "pnpm -r test",
+    "test:be": "cd veroxos-be && pnpm test",
+    "typecheck": "pnpm -r typecheck",
+    "typecheck:be": "cd veroxos-be && pnpm typecheck",
+    "typecheck:fe": "cd veroxos-fe && pnpm typecheck"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.2.0",
-    "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "tailwindcss": "^4",
-    "typescript": "^5"
+    "pnpm": "^9.0.0"
   }
 }

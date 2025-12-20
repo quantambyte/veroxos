@@ -1,0 +1,77 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: veroxos-postgres
+    environment:
+      POSTGRES_DB: ${DB_NAME:-veroxos}
+      POSTGRES_USER: ${DB_USER:-veroxos}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-veroxos123}
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-veroxos}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - veroxos-network
+
+  backend:
+    build:
+      context: ./veroxos-be
+      dockerfile: Dockerfile
+    container_name: veroxos-backend
+    ports:
+      - "${BACKEND_PORT:-4000}:3000"
+    environment:
+      DATABASE_URL: postgresql://${DB_USER:-veroxos}:${DB_PASSWORD:-veroxos123}@postgres:5432/${DB_NAME:-veroxos}
+      PORT: 3000
+      NODE_ENV: development
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./veroxos-be/src:/app/src:ro
+      - ./veroxos-be/package.json:/app/package.json:ro
+      - ./veroxos-be/tsconfig.json:/app/tsconfig.json:ro
+      - ./veroxos-be/tsconfig.build.json:/app/tsconfig.build.json:ro
+      - ./veroxos-be/nest-cli.json:/app/nest-cli.json:ro
+      - ./veroxos-be/eslint.config.mjs:/app/eslint.config.mjs:ro
+      - /app/node_modules
+      - /app/dist
+    entrypoint: ["sh", "-c"]
+    user: "root"
+    command:
+      - |
+        corepack prepare pnpm@8.5.0 --activate
+        if [ ! -d "/app/node_modules/@nestjs" ]; then
+          echo "Installing dependencies..."
+          pnpm install
+        fi
+        rm -rf /app/dist
+        pnpm run start:dev
+    networks:
+      - veroxos-network
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "wget",
+          "--no-verbose",
+          "--tries=1",
+          "--spider",
+          "http://localhost:3000/health",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  postgres_data:
+
+networks:
+  veroxos-network:
+    driver: bridge
